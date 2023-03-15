@@ -55,7 +55,6 @@ def train():
 
 def load():
     image = Image.open('image.png').convert('L')
-    image.show()
     image_array = np.asarray(image) / 255.0
     image_array = np.reshape(image_array, (1, 28, 28, 1))
     model = tf.keras.models.load_model('mnist.h5')
