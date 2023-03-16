@@ -36,6 +36,7 @@ def train():
     model = tf.keras.models.Sequential([
         tf.keras.layers.Flatten(input_shape=(28, 28)),
         tf.keras.layers.Dense(128, activation='relu'),
+        tf.keras.layers.Dense(64, activation='relu'),
         tf.keras.layers.Dense(10)
     ])
 
@@ -47,20 +48,31 @@ def train():
 
     model.fit(
         ds_train,
-        epochs=6,
+        epochs=8,
         validation_data=ds_test
     )
-    
-    model.save('mnist.h5')
+
+    save = input('Do you want to save the model? (y/n) ').lower()
+    if save == 'y':
+        model.save('mnist.keras')
+        print('Model saved')
+    else:
+        print('Model not saved')
 
 def load():
     image = Image.open('image.png').convert('L')
     image_array = np.asarray(image) / 255.0
     image_array = np.reshape(image_array, (1, 28, 28, 1))
-    model = tf.keras.models.load_model('mnist.h5')
+    model = tf.keras.models.load_model('mnist.keras')
     model.summary()
     prediction = model.predict(image_array)
     print(f'The model predicted: {np.argmax(prediction)}')
 
 if __name__ == '__main__':
-    load()  
+    operation = input('Do you want to train or load the model? (train/load) ').lower()
+    if operation == 'train':
+        train()
+    elif operation == 'load':   
+        load()  
+    else:
+        print('Invalid operation')
